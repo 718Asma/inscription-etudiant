@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +16,8 @@
     "ejs": "^3.1.10",
     "express": "^4.21.1",
     "helmet": "^8.0.0",
-    "mongoose": "^8.8.0"
+    "inscritption-etudiant": "file:",
+    "mongoose": "^8.8.0",
+    "nodemon": "^3.1.7"
   }
 }
