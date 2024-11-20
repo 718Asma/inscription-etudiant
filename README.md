@@ -119,12 +119,12 @@ Le diagramme de classes présente les entités principales du système : `Étudi
    git clone https://github.com/718Asma/inscription-etudiant.git
    ```
 
-2. Navigate to the project directory:
+2. Accédez au répertoire du projet :
    ```bash
     cd inscription-etudiant
    ```
 
-3. Install the dependencies:
+3. Installez les dépendances :
    ```bash
     npm install
    ```
@@ -132,9 +132,9 @@ Le diagramme de classes présente les entités principales du système : `Étudi
 
 ## Usage
 
-1. Start the application:
+1. Démarrer l'application :
    ```bash
     npm start
    ```
 
-2. Open your browser and navigate to http://localhost:6969.
+2. Ouvrez votre navigateur et accédez à http://localhost:6969.
