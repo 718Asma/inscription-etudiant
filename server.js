@@ -36,6 +36,16 @@ app.get("/dashboard", verifyToken, (req, res) => {
     }
 });
 
+// Root route logic for redirection based on token
+app.get("/", (req, res) => {
+    const token = req.cookies.token;
+    if (token) {
+        res.redirect("/dashboard"); // Redirect to the dashboard if token exists
+    } else {
+        res.redirect("/login"); // Redirect to login if no token exists
+    }
+});
+
 app.use("/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/inscription", inscriptionRoutes);
