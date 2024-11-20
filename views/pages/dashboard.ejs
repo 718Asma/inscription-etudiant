@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/css/tailwind.css">
+</head>
+<body>
+    <%- include('../partials/header') %>
+    
+    <div class="container mx-auto px-4">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Student Profiles</h2>
+
+        <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+            <table class="w-full mt-6 table-auto">
+                <thead>
+                    <tr class="bg-gray-500">
+                        <th class="px-4 py-2 border">Student ID</th>
+                        <th class="px-4 py-2 border">Student Name</th>
+                        <th class="px-4 py-2 border">Inscription Date</th>
+                        <th class="px-4 py-2 border">Course</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Loop through the profiles passed from the backend -->
+                    <% profiles.forEach(profile => { %>
+                        <tr class="text-center hover:bg-gray-200">
+                            <td class="px-4 py-2 border"><%= profile.studentId %></td>
+                            <td class="px-4 py-2 border"><%= profile.studentName %></td>
+                            <td class="px-4 py-2 border"><%= profile.inscriptionDate %></td>
+                            <td class="px-4 py-2 border"><%= profile.course %></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

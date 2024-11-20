@@ -1,17 +1,34 @@
-exports.login = (req, res) => {
-    if (req.body.email && req.body.password) {
-        res.send(`Connecté:\t${JSON.stringify(req.body)}`);
-    } else {
-        res.status(400).json({ message: "Invalid email or password." });
-    }
-};
+exports.getAllProfiles = (req, res) => {
+    // Fictional array of profiles to test with
+    const profiles = [
+        {
+            studentId: "S1001",
+            studentName: "John Doe",
+            inscriptionDate: "2024-01-15",
+            course: "Computer Science"
+        },
+        {
+            studentId: "S1002",
+            studentName: "Jane Smith",
+            inscriptionDate: "2023-11-22",
+            course: "Software Engineering"
+        },
+        {
+            studentId: "S1003",
+            studentName: "Alice Johnson",
+            inscriptionDate: "2024-02-10",
+            course: "Information Systems"
+        },
+        {
+            studentId: "S1004",
+            studentName: "Bob Brown",
+            inscriptionDate: "2023-09-18",
+            course: "Cybersecurity"
+        }
+    ];
 
-exports.register = (req, res) => {
-    if (req.body.firstName && req.body.lastName && req.body.email && req.body.password) {
-        res.send(`Compte Créé:\t${JSON.stringify(req.body)}`);
-    } else {
-        res.status(400).json({ message: "Attributs Manquants." });
-    }
+    // Render the dashboard and pass the profiles data to the view
+    res.render("pages/dashboard", { profiles: profiles });
 };
 
 exports.getProfile = (req, res) => {

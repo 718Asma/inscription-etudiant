@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <!-- <link rel="stylesheet" href="../../styles/styles.css"> -->
+    <link rel="stylesheet" href="/css/tailwind.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Sign Up</h2>
+        <form action="/auth/register" method="POST">
+            <table>
+                <tr>
+                    <td><label for="firstName">First Name:</label></td>
+                    <td><input type="text" id="firstName" name="firstName" required></td>
+                </tr>
+                <tr>
+                    <td><label for="lastName">Last Name:</label></td>
+                    <td><input type="text" id="lastName" name="lastName" required></td>
+                </tr>
+                <tr>
+                    <td><label for="email">Email:</label></td>
+                    <td><input type="email" id="email" name="email" required></td>
+                </tr>
+                <tr>
+                    <td><label for="password">Password:</label></td>
+                    <td><input type="password" id="password" name="password" required></td>
+                </tr>
+                <tr>
+                    <td><label for="confirm-password">Confirm Password:</label></td>
+                    <td><input type="password" id="confirm-password" name="confirm-password" required></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><button type="submit">Sign Up</button></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</body>
+</html>
