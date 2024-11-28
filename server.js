@@ -1,16 +1,31 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser"); // Add this line
+const cookieParser = require("cookie-parser");
+const mongoose = require("mongoose");
+const path = require('path');
+const methodOverride = require('method-override');
+
+require('dotenv').config();
 
 const authRoutes = require("./routes/authRoutes");
-const userRoutes = require("./routes/usersRoutes");
+const etudiantRoutes = require("./routes/etudiantRoutes");
 const inscriptionRoutes = require("./routes/inscriptionRoutes");
 const verifyToken = require("./middlewares/verifyToken");
-const userController = require("./controllers/userController");
+const userController = require("./controllers/etudiantController");
+const inscriptionController = require("./controllers/inscriptionController");
 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
+
+const mongoDb = process.env.MONGODB_URI;
+mongoose.connect(mongoDb, {});
+const db = mongoose.connection;
+db.on("open", () => {
+    console.log("Connected to MongoDB");
+});
+db.on("error", console.error.bind(console, "mongo connection error"));
 
 app.use(cookieParser());
 
@@ -18,7 +33,9 @@ app.use(cookieParser());
 app.use(express.static('public'));
 
 // Set the view engine to EJS
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
 
 // EJS Routes
 app.get("/login", (req, res) => {
@@ -28,6 +45,9 @@ app.get("/register", (req, res) => {
     res.render('pages/signup');
 });
 app.get("/dashboard", verifyToken, (req, res) => {
+    res.redirect("/etudiants");
+});
+app.get("/etudiants", verifyToken, (req, res) => {
     const token = req.cookies.token;
     if (token) {
         userController.getAllProfiles(req, res);
@@ -35,19 +55,25 @@ app.get("/dashboard", verifyToken, (req, res) => {
         res.redirect("/login");
     }
 });
-
-// Root route logic for redirection based on token
+app.get("/inscriptions", verifyToken, (req, res) => {
+    const token = req.cookies.token;
+    if (token) {
+        inscriptionController.getAllInscriptions(req, res);
+    } else {
+        res.redirect("/login");
+    }
+});
 app.get("/", (req, res) => {
     const token = req.cookies.token;
     if (token) {
-        res.redirect("/dashboard"); // Redirect to the dashboard if token exists
+        res.redirect("/dashboard");
     } else {
-        res.redirect("/login"); // Redirect to login if no token exists
+        res.redirect("/login");
     }
 });
 
 app.use("/auth", authRoutes);
-app.use("/api/users", userRoutes);
+app.use("/api/etudiant", etudiantRoutes);
 app.use("/api/inscription", inscriptionRoutes);
 
 const PORT = process.env.PORT || 5000;

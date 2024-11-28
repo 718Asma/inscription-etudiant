@@ -23,7 +23,8 @@
     "helmet": "^8.0.0",
     "inscritption-etudiant": "file:",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.8.0",
+    "method-override": "^3.0.0",
+    "mongoose": "^8.8.3",
     "nodemon": "^3.1.7"
   },
   "devDependencies": {

@@ -7,5 +7,6 @@ router.post("/submit", inscriptionController.submitRequest);
 router.get("/:id", inscriptionController.getInscription);
 router.put("/valider/:id", inscriptionController.validateRequest);
 router.put("/rejeter/:id", inscriptionController.rejectRequest);
+router.put("/archiver/:id", inscriptionController.archiveRequest);
 
 module.exports = router;

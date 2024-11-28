@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enrollments Dashboard</title>
+    <link rel="stylesheet" href="/css/tailwind.css">
+</head>
+<body>
+    <%- include('../partials/header') %>
+
+    <div style="display: flex;">
+        <%- include ('../partials/sidebar') %>
+        <div style="margin-top: 1%;" class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Student Enrollments</h2>
+
+            <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+                <table class="w-full mt-6 table-auto">
+                    <thead>
+                        <tr class="bg-gray-200"> <!-- Lighter gray background -->
+                            <th class="px-4 py-2 border">Student Name</th>
+                            <th class="px-4 py-2 border">Grade</th>
+                            <th class="px-4 py-2 border">School Year</th>
+                            <th class="px-4 py-2 border">Enrollment Date</th>
+                            <th class="px-4 py-2 border">Status</th>
+                            <th class="px-4 py-2 border">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% enrollments.forEach(enrollment => { %>
+                            <tr class="text-center hover:bg-gray-100 <%= enrollment.state === 'archived' ? 'text-gray-500' : '' %>">
+                                <td class="px-4 py-2 border">
+                                    <a href="api/etudiant/profile/<%= enrollment.student._id %>" class="<%= enrollment.state === 'archived' ? 'pointer-events-none' : '' %>">
+                                        <%= enrollment.student.firstName %> <%= enrollment.student.lastName %>
+                                    </a>
+                                </td>
+                                <td class="px-4 py-2 border"><%= enrollment.grade %></td>
+                                <td class="px-4 py-2 border"><%= enrollment.uniYear %></td>
+                                <td class="px-4 py-2 border">
+                                    <%= new Date(enrollment.enrollmentDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %>
+                                </td>
+                                <td class="px-4 py-2 border">
+                                    <%= enrollment.state.charAt(0).toUpperCase() + enrollment.state.slice(1) %> <!-- Capitalize state -->
+                                </td>
+                                <td class="px-4 py-2 border">
+                                    <% if (enrollment.state === 'pending') { %>
+                                        <button class="text-green-500 hover:text-green-700 ml-4" onclick="approveEnrollment('<%= enrollment._id %>')">Approve</button>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <button class="text-red-500 hover:text-red-700 ml-4" onclick="rejectEnrollment('<%= enrollment._id %>')">Reject</button>
+                                    <% } else if (enrollment.state === 'approved' || enrollment.state === 'rejected') { %>
+                                        <button class="text-gray-500 hover:text-gray-700 ml-4" onclick="archiveEnrollment('<%= enrollment._id %>')">Archive</button>
+                                    <% } else if (enrollment.state === 'archived') { %>
+                                        <span class="ml-4">N/A</span>
+                                    <% } %>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function approveEnrollment(id) {
+            try {
+                const response = await fetch(`/api/inscription/valider/${id}`, { method: 'PUT' });
+                const data = await response.json();
+                alert('Enrollment approved!');
+                location.reload();
+            } catch (error) {
+                alert('Failed to approve enrollment.');
+                console.error(error);
+            }
+        }
+
+        async function rejectEnrollment(id) {
+            try {
+                const response = await fetch(`/api/inscription/rejeter/${id}`, { method: 'PUT' });
+                const data = await response.json();
+                alert('Enrollment rejected!');
+                location.reload();
+            } catch (error) {
+                alert('Failed to reject enrollment.');
+                console.error(error);
+            }
+        }
+
+        async function archiveEnrollment(id) {
+            try {
+                const response = await fetch(`/api/inscription/archiver/${id}`, { method: 'PUT' });
+                const data = await response.json();
+                alert('Enrollment archived!');
+                location.reload();
+            } catch (error) {
+                alert('Failed to archive enrollment.');
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+</html>

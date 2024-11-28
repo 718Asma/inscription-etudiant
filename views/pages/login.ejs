@@ -12,7 +12,6 @@
     <p class="text-gray-600 text-center mb-6">Sign in to continue</p>
 
     <form action="/auth/login" method="POST" class="space-y-4">
-      <!-- Email Field -->
       <div>
         <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
         <input 
@@ -24,7 +23,6 @@
         >
       </div>
 
-      <!-- Password Field -->
       <div>
         <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
         <input 
@@ -36,7 +34,6 @@
         >
       </div>
 
-      <!-- Submit Button -->
       <button 
         type="submit" 
         class="w-full bg-blue-500 text-white py-2 rounded-lg shadow-md hover:bg-blue-600 transition duration-200"
@@ -45,7 +42,6 @@
       </button>
     </form>
 
-    <!-- Error Message Display -->
     <% if (typeof errorMessage !== 'undefined') { %>
         <div class="text-red-500 text-center mt-4">
             <p><%= errorMessage %></p>

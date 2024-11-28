@@ -21,6 +21,7 @@
                             <th class="px-4 py-2 border">Name</th>
                             <th class="px-4 py-2 border">Birthday</th>
                             <th class="px-4 py-2 border">Address</th>
+                            <th class="px-4 py-2 border">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -30,6 +31,9 @@
                                 <td class="px-4 py-2 border"><a href="api/etudiant/profile/<%= profile._id %>"><%= profile.firstName %> <%= profile.lastName %></a></td>
                                 <td class="px-4 py-2 border"><%= new Date(profile.birthday).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></td>
                                 <td class="px-4 py-2 border"><%= profile.address %></td>
+                                <td class="px-4 py-2 border">
+                                    <button class="text-red-500 hover:text-red-700 ml-4" onclick="deleteProfile('<%= profile._id %>')">Delete</button>
+                                </td>
                             </tr>
                         <% }) %>
                     </tbody>
@@ -38,5 +42,30 @@
         </div>
     </div>
     
+
+    <script>
+        function deleteProfile(profileId) {
+            if (confirm("Are you sure you want to delete this profile?")) {
+                fetch(`api/etudiant/supprimerProfile/${profileId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Profile deleted successfully.');
+                        location.reload();
+                    } else {
+                        alert('Failed to delete the profile.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting the profile.');
+                });
+            }
+        }
+    </script>
 </body>
 </html>

@@ -1,12 +1,20 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const agentSchema = new Schema({
+const etudiantSchema = new Schema({
     firstName: {
         type: String,
         required: true,
     },
     lastName: {
+        type: String,
+        required: true,
+    },
+    birthday: {
+        type: Date,
+        required: true,
+    },
+    address: {
         type: String,
         required: true,
     },
@@ -20,4 +28,4 @@ const agentSchema = new Schema({
     },
 });
 
-module.exports = mongoose.model("Agent", agentSchema);
+module.exports = mongoose.model("Etudiant", etudiantSchema);

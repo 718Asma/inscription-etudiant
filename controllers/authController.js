@@ -1,53 +1,47 @@
-const { render } = require("ejs");
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
+const authService = require("../services/authService");
 
-const generateToken = (user) => {
-    return jwt.sign(
-        { email: user.email, firstName: user.firstName, lastName: user.lastName },
-        process.env.ACCESS_JWT_SECRET,
-        { expiresIn: '1h' }
-    );
-};
-
-exports.login = (req, res) => {
-    if (req.body.email && req.body.password) {
-        const user = { email: req.body.email, password: req.body.password };
-        const token = generateToken(user);
-
+exports.login = async (req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password) {
+        return res.status(400).json({ message: "Email and password are required." });
+    }
+    try {
+        const token = await authService.login(email, password);
         res.cookie("token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             maxAge: 3600 * 1000, // 1 hour
             sameSite: "Strict",
         });
-
-        res.redirect('/dashboard');
-    } else {
-        res.render("pages/login", { errorMessage: "Invalid email or password. Please try again." });
+        res.redirect("/dashboard");
+    } catch (error) {
+        res.status(401).json({ message: error.message });
     }
 };
 
-
-exports.register = (req, res) => {
-    if (req.body.firstName && req.body.lastName && req.body.email && req.body.password) {
-        const user = { email: req.body.email, firstName: req.body.firstName, lastName: req.body.lastName, password: req.body.password };
-        const token = generateToken(user);
-
+exports.register = async (req, res) => {
+    const { firstName, lastName, email, password } = req.body;
+    if (!firstName || !lastName || !email || !password) {
+        return res.status(400).json({ message: "All fields are required." });
+    }
+    try {
+        const token = await authService.register(firstName, lastName, email, password);
         res.cookie("token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            maxAge: 3600 * 1000,
+            maxAge: 3600 * 1000, // 1 hour
             sameSite: "Strict",
         });
-
-        res.render('../views/pages/dashboard');
-    } else {
-        res.status(400).json({ message: "Attributs Manquants." });
+        res.redirect("/dashboard");
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 };
 
-exports.logout = (req, res) => {
-    res.clearCookie("token", { httpOnly: true, sameSite: "Strict" });
-    res.redirect("/login");
+exports.logout = async (req, res) => {
+    try {
+        await authService.logout(req, res);
+    } catch (error) {
+        res.status(500).json({ message: "Logout failed." });
+    }
 };
