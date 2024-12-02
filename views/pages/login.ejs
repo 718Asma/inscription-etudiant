@@ -34,6 +34,8 @@
         >
       </div>
 
+      <input type="hidden" name="role" value="agent">
+
       <button 
         type="submit" 
         class="w-full bg-blue-500 text-white py-2 rounded-lg shadow-md hover:bg-blue-600 transition duration-200"
@@ -47,17 +49,6 @@
             <p><%= errorMessage %></p>
         </div>
     <% } %>
-
-    <!-- <div class="mt-6 flex items-center">
-      <div class="flex-grow h-px bg-gray-300"></div>
-      <span class="px-3 text-sm text-gray-500">OR</span>
-      <div class="flex-grow h-px bg-gray-300"></div>
-    </div>
-
-    <div class="mt-4 text-center">
-      <span class="text-sm text-gray-600">Don't have an account?</span>
-      <a href="/register" class="text-sm text-blue-500 font-medium hover:underline">Sign up</a>
-    </div> -->
   </div>
 </body>
 </html>

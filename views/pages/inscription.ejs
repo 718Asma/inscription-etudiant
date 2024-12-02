@@ -17,8 +17,9 @@
             <div class="overflow-x-auto bg-white shadow-md rounded-lg">
                 <table class="w-full mt-6 table-auto">
                     <thead>
-                        <tr class="bg-gray-200"> <!-- Lighter gray background -->
+                        <tr class="bg-gray-200">
                             <th class="px-4 py-2 border">Student Name</th>
+                            <th class="px-4 py-2 border">University</th>
                             <th class="px-4 py-2 border">Grade</th>
                             <th class="px-4 py-2 border">School Year</th>
                             <th class="px-4 py-2 border">Enrollment Date</th>
@@ -34,13 +35,14 @@
                                         <%= enrollment.student.firstName %> <%= enrollment.student.lastName %>
                                     </a>
                                 </td>
+                                <td class="px-4 py-2 border"><%= enrollment.university.name %></td>
                                 <td class="px-4 py-2 border"><%= enrollment.grade %></td>
                                 <td class="px-4 py-2 border"><%= enrollment.uniYear %></td>
                                 <td class="px-4 py-2 border">
                                     <%= new Date(enrollment.enrollmentDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %>
                                 </td>
                                 <td class="px-4 py-2 border">
-                                    <%= enrollment.state.charAt(0).toUpperCase() + enrollment.state.slice(1) %> <!-- Capitalize state -->
+                                    <%= enrollment.state.charAt(0).toUpperCase() + enrollment.state.slice(1) %>
                                 </td>
                                 <td class="px-4 py-2 border">
                                     <% if (enrollment.state === 'pending') { %>

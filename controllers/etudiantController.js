@@ -1,37 +1,61 @@
 const etudiantService = require("../services/etudiantService");
 
 exports.getAllProfiles = async (req, res) => {
-    const etudiants = await etudiantService.getAllProfiles();
-
-    if (etudiants) {
+    try {
+        const etudiants = await etudiantService.getAllProfiles();
         res.render("pages/etudiant", { profiles: etudiants });
-    } else {
+    } catch (error) {
+        console.error("Error fetching profiles:", error);
         res.status(500).json({ message: "Erreur lors de la récupération des profils." });
     }
 };
 
 exports.getProfile = async (req, res) => {
-    if (req.params.id) {
-        const etudiant = await etudiantService.getProfile(req.params.id);
+    try {
+        const { id } = req.params;
+        if (!id) return res.status(400).json({ message: "ID requis." });
+
+        const etudiant = await etudiantService.getProfile(id);
+        if (!etudiant) return res.status(404).json({ message: "Profil non trouvé." });
+
         res.json(etudiant);
         // res.render("pages/profile", { profile: etudiant });
+    } catch (error) {
+        console.error("Error fetching profile:", error);
+        res.status(500).json({ message: "Erreur lors de la récupération du profil." });
     }
 };
 
 exports.updateProfile = async (req, res) => {
-    if (req.params.id && req.body.firstName && req.body.lastName && req.body.email && req.body.password) {
-        const etudiant = await etudiantService.updateProfile(req.params.id, req.body);
+    try {
+        const { id } = req.params;
+        const { firstName, lastName, email, password } = req.body;
+
+        if (!id || !firstName || !lastName || !email || !password) {
+            return res.status(400).json({ message: "Attributs manquants." });
+        }
+
+        const etudiant = await etudiantService.updateProfile(id, req.body);
+        if (!etudiant) return res.status(404).json({ message: "Profil non trouvé." });
+
         res.json(etudiant);
-    } else {
-        res.status(400).json({ message: "Attributs Manquants." });
+    } catch (error) {
+        console.error("Error updating profile:", error);
+        res.status(500).json({ message: "Erreur lors de la mise à jour du profil." });
     }
 };
 
 exports.deleteProfile = async (req, res) => {
-    if(req.params.id) {
-        const etudiant = await etudiantService.deleteProfile(req.params.id);
-        res.json(etudiant);
-    } else {
-        res.status(400).json({ message: "Attributs Manquants." });
+    try {
+        const { id } = req.params;
+        if (!id) return res.status(400).json({ message: "ID requis." });
+
+        const etudiant = await etudiantService.deleteProfile(id);
+        if (!etudiant) return res.status(404).json({ message: "Profil non trouvé." });
+
+        res.json({ message: "Profil supprimé avec succès." });
+    } catch (error) {
+        console.error("Error deleting profile:", error);
+        res.status(500).json({ message: "Erreur lors de la suppression du profil." });
     }
 };

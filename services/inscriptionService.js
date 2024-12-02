@@ -1,9 +1,10 @@
-const Inscripion = require('../models/inscription');
+const Inscription = require('../models/inscription');
 
 exports.getAllInscriptions = async () => {
     try {
-        const inscriptions = await Inscripion.find()
-            .populate('student', 'firstName lastName');
+        const inscriptions = await Inscription.find()
+            .populate('student', 'firstName lastName')
+            .populate('university', 'name');
 
         const statePriority = {
             pending: 0,
@@ -13,7 +14,11 @@ exports.getAllInscriptions = async () => {
         };
 
         inscriptions.sort((a, b) => {
-            return statePriority[a.state] - statePriority[b.state];
+            const stateComparison = statePriority[a.state] - statePriority[b.state];
+            if (stateComparison !== 0) {
+                return stateComparison;
+            }
+            return new Date(a.enrollmentDate) - new Date(b.enrollmentDate);
         });
 
         return inscriptions;
@@ -24,7 +29,7 @@ exports.getAllInscriptions = async () => {
 
 exports.getInscription = async (id) => {
     try {
-        const inscription = await Inscripion.findById(id)
+        const inscription = await Inscription.findById(id)
         .populate('student', 'firstName lastName');
         return inscription;
     } catch (error) {
@@ -34,7 +39,7 @@ exports.getInscription = async (id) => {
 
 exports.submitRequest = async (inscription) => {
     try {
-        const newInscription = new Inscripion(inscription);
+        const newInscription = new Inscription(inscription);
         await newInscription.save();
         return newInscription;
     } catch (error) {
@@ -44,7 +49,7 @@ exports.submitRequest = async (inscription) => {
 
 exports.validateRequest = async (id) => {
     try {
-        const inscription = await Inscripion.findByIdAndUpdate(id, { state: 'approved' }, { new: true });
+        const inscription = await Inscription.findByIdAndUpdate(id, { state: 'approved' }, { new: true });
         return inscription;
     } catch (error) {
         throw new Error(`Failed to validate inscription: ${error.message}`);
@@ -53,7 +58,7 @@ exports.validateRequest = async (id) => {
 
 exports.rejectRequest = async (id) => {
     try {
-        const inscription = await Inscripion.findByIdAndUpdate(id, { state: 'rejected' }, { new: true });
+        const inscription = await Inscription.findByIdAndUpdate(id, { state: 'rejected' }, { new: true });
         return inscription;
     } catch (error) {
         throw new Error(`Failed to reject inscription: ${error.message}`);
@@ -62,7 +67,7 @@ exports.rejectRequest = async (id) => {
 
 exports.archiveRequest = async (id) => {
     try {
-        const inscription = await Inscripion.findByIdAndUpdate(id, { state: 'archived' }, { new: true });
+        const inscription = await Inscription.findByIdAndUpdate(id, { state: 'archived' }, { new: true });
         return inscription;
     } catch (error) {
         throw new Error(`Failed to archive inscription: ${error.message}`);

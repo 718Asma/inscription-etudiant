@@ -17,14 +17,13 @@
             <div class="overflow-x-auto bg-white shadow-md rounded-lg">
                 <table class="w-full mt-6 table-auto">
                     <thead>
-                        <tr class="bg-gray-200"> <!-- Lighter gray background -->
+                        <tr class="bg-gray-200">
                             <th class="px-4 py-2 border">Name</th>
                             <th class="px-4 py-2 border">Birthday</th>
                             <th class="px-4 py-2 border">Address</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Loop through the profiles passed from the backend -->
                         <% profiles.forEach(profile => { %>
                             <tr class="text-center hover:bg-gray-100">
                                 <td class="px-4 py-2 border"><a href="api/etudiant/profile/<%= profile._id %>"><%= profile.firstName %> <%= profile.lastName %></a></td>

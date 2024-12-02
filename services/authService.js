@@ -1,6 +1,8 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const Agent = require("../models/agent");
+const Agent = require('../models/agent');
+const Etudiant = require('../models/etudiant');
+const User = require('../models/user');
 
 const salt = process.env.SALT;
 if (!salt) {
@@ -15,11 +17,16 @@ const generateToken = (agent) => {
     );
 };
 
-exports.login = async (email, password) => {
+exports.login = async (email, password, role) => {
     try {
-        const agent = await Agent.findOne({ email });
-        if (agent && bcrypt.compareSync(password, agent.password)) {
-            return generateToken(agent);
+        if (role !== 'agent' && role !== 'etudiant') {
+            throw new Error("Invalid role.");
+        }
+
+        const etudiantOrAgent = await User.findOne({ email, role });
+
+        if (etudiantOrAgent && bcrypt.compareSync(password, etudiantOrAgent.password)) {
+            return generateToken(etudiantOrAgent);
         } else {
             throw new Error("Invalid email or password.");
         }
@@ -28,29 +35,36 @@ exports.login = async (email, password) => {
     }
 };
 
-exports.register = async (firstName, lastName, email, password) => {
+exports.register = async (firstName, lastName, email, password, role, address, birthday) => {
     try {
-        const s = await bcrypt.genSalt(Number(salt)); // Generate salt with the provided rounds
-        const hashedPassword = await bcrypt.hash(password, s); // Hash the password with the generated salt
-        const agent = new Agent({ firstName, lastName, email, password: hashedPassword });
-        await agent.save();
-        return generateToken(agent);
+        if (!["agent", "etudiant"].includes(role)) {
+            throw new Error("Invalid role. Role must be either 'agent' or 'etudiant'.");
+        }
+
+        const existingetudiant = await Agent.findOne({ email }) || await Etudiant.findOne({ email });
+        if (existingetudiant) {
+            throw new Error("Email already in use. Please choose a different email.");
+        }
+
+        const s = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, s);
+
+        let etudiant;
+        if (role === "agent") {
+            etudiant = new Agent({ firstName, lastName, email, password: hashedPassword, role });
+        } else if (role === "etudiant") {
+            if (!address || !birthday) {
+                throw new Error("Address and birthday are required for 'etudiant'.");
+            }
+            etudiant = new Etudiant({ firstName, lastName, email, password: hashedPassword, role, address, birthday });
+        }
+
+        await etudiant.save();
+        return generateToken(etudiant);
     } catch (error) {
         throw new Error(`Registration failed: ${error.message}`);
     }
 };
-
-// exports.register = async (firstName, lastName, address, birthday, email, password) => {
-//     try {
-//         const s = await bcrypt.genSalt(Number(salt));
-//         const hashedPassword = await bcrypt.hash(password, s);
-//         const agent = new agent({ firstName, lastName, address, birthday, email, password: hashedPassword });
-//         await agent.save();
-//         return generateToken(agent);
-//     } catch (error) {
-//         throw new Error(`Registration failed: ${error.message}`);
-//     }
-// };
 
 exports.logout = async (req, res) => {
     try {

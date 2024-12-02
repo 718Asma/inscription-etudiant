@@ -9,3 +9,6 @@ package-lock.json
 
 #Ignore .vscode directory
 .vscode/
+
+views/pages/signup.ejs
+views/pages/dashboard.ejs

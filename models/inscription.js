@@ -7,6 +7,11 @@ const inscriptionSchema = new Schema({
         ref: "Etudiant",
         required: true,
     },
+    university: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Faculte",
+        required: true,
+    },
     grade: {
         type: String,
         required: true,
@@ -15,14 +20,16 @@ const inscriptionSchema = new Schema({
         type: String,
         required: true,
     },
-    enrollmentDate: {
-        type: Date,
-        required: true,
-    },
     state: {
         type: String,
         required: true,
         enum: ['pending', 'approved', 'rejected', 'archived'], 
+        default: 'pending',
+    },
+    enrollmentDate: {
+        type: Date,
+        required: true,
+        default: Date.now,
     },
 }, { timestamps: true }); 
 

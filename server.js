@@ -10,6 +10,7 @@ require('dotenv').config();
 const authRoutes = require("./routes/authRoutes");
 const etudiantRoutes = require("./routes/etudiantRoutes");
 const inscriptionRoutes = require("./routes/inscriptionRoutes");
+const facultyRoutes = require("./routes/facultyRoutes");
 const verifyToken = require("./middlewares/verifyToken");
 const userController = require("./controllers/etudiantController");
 const inscriptionController = require("./controllers/inscriptionController");
@@ -75,6 +76,7 @@ app.get("/", (req, res) => {
 app.use("/auth", authRoutes);
 app.use("/api/etudiant", etudiantRoutes);
 app.use("/api/inscription", inscriptionRoutes);
+app.use("/api/faculte", facultyRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
