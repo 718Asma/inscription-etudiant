@@ -29,16 +29,22 @@ exports.getProfile = async (req, res) => {
 exports.updateProfile = async (req, res) => {
     try {
         const { id } = req.params;
-        const { firstName, lastName, email, password } = req.body;
 
-        if (!id || !firstName || !lastName || !email || !password) {
-            return res.status(400).json({ message: "Attributs manquants." });
+        if (!id) {
+            return res.status(400).json({ message: "ID de l'étudiant manquant." });
         }
 
-        const etudiant = await etudiantService.updateProfile(id, req.body);
-        if (!etudiant) return res.status(404).json({ message: "Profil non trouvé." });
+        const { firstName, lastName, email, password } = req.body;
+        if (!firstName && !lastName && !email && !password) {
+            return res.status(400).json({ message: "Au moins un attribut est requis pour la mise à jour." });
+        }
 
-        res.json(etudiant);
+        const updatedProfile = await etudiantService.updateProfile(id, req.body);
+        if (!updatedProfile) {
+            return res.status(404).json({ message: "Profil non trouvé." });
+        }
+
+        res.json(updatedProfile);
     } catch (error) {
         console.error("Error updating profile:", error);
         res.status(500).json({ message: "Erreur lors de la mise à jour du profil." });

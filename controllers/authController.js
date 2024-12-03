@@ -17,7 +17,8 @@ exports.login = async (req, res) => {
             res.redirect("/dashboard");
         }
     } catch (error) {
-        res.status(401).json({ message: error.message });
+        res.render("pages/login", { errorMessage: error.message });
+        // res.status(401).json({ message: error.message });
     }
 };
 
@@ -34,7 +35,8 @@ exports.register = async (req, res) => {
             maxAge: 3600 * 1000,
             sameSite: "Strict",
         });
-        res.redirect("/dashboard");
+        res.status(201).json({ message: "Inscription réussie." })
+        // res.redirect("/dashboard");
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

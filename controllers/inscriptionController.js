@@ -8,16 +8,16 @@ exports.getAllInscriptions = async (req, res) => {
     } else {
         res.status(500).json({ message: "Erreur lors de la récupération des profils." });
     }
-
 };
 
 exports.submitRequest = async (req, res) => {
-    if (req.body.grade && req.body.uniYear && req.body.enrollmentDate && req.body.student) {
+    if (req.body.university && req.body.grade && req.body.uniYear && req.body.enrollmentDate && req.body.studentId) {
         const inscription = {
+            university: req.body.university,
             grade: req.body.grade,
             uniYear: req.body.uniYear,
             enrollmentDate: req.body.enrollmentDate,
-            student: req.body.student,
+            student: req.body.studentId,
             state: "pending",
         };
 

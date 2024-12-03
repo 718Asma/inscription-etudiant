@@ -30,10 +30,23 @@ exports.addFaculte = async (faculty) => {
 
 exports.updateFaculte = async (id, faculty) => {
     try {
-        const faculte = await Faculte.findByIdAndUpdate(id, faculty, { new: true });
+        const existingFaculty = await Faculte.findById(id);
+        if (!existingFaculty) {
+            throw new Error("Faculté introuvable.");
+        }
+
+        const updatedFaculty = {
+            name: faculty.name || existingFaculty.name,
+            address: faculty.address || existingFaculty.address,
+            phone: faculty.phone || existingFaculty.phone,
+            email: faculty.email || existingFaculty.email
+        };
+
+        const faculte = await Faculte.findByIdAndUpdate(id, updatedFaculty, { new: true });
         return faculte;
+
     } catch (error) {
-        throw new Error(`Failed to update faculte: ${error.message}`);
+        throw new Error(`Échec de la mise à jour de la faculté: ${error.message}`);
     }
 };
 

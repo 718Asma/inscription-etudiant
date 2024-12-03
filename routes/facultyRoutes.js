@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const faculteController = require("../controllers/faculteController");
+const verifyToken = require("../middlewares/verifyToken");
 
-router.get("/", faculteController.getAllFacultes);
-router.post("/add", faculteController.addFaculte);
-router.get("/:id", faculteController.getFaculte);
-router.put("/update/:id", faculteController.updateFaculte);
-router.delete("/delete/:id", faculteController.deleteFaculte);
+router.get("/", verifyToken, faculteController.getAllFacultes);
+router.post("/add", verifyToken, faculteController.addFaculte);
+router.get("/:id", verifyToken, faculteController.getFaculte);
+router.put("/update/:id", verifyToken, faculteController.updateFaculte);
+router.delete("/delete/:id", verifyToken, faculteController.deleteFaculte);
 
 module.exports = router;

@@ -35,6 +35,12 @@
       </div>
 
       <input type="hidden" name="role" value="agent">
+      
+      <% if (typeof errorMessage !== 'undefined') { %>
+          <div class="text-red-500 text-center mt-4">
+              <p><%= errorMessage %></p>
+          </div>
+      <% } %>
 
       <button 
         type="submit" 
@@ -44,11 +50,6 @@
       </button>
     </form>
 
-    <% if (typeof errorMessage !== 'undefined') { %>
-        <div class="text-red-500 text-center mt-4">
-            <p><%= errorMessage %></p>
-        </div>
-    <% } %>
   </div>
 </body>
 </html>
