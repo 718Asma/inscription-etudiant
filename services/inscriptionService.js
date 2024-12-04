@@ -1,6 +1,4 @@
 const Inscription = require('../models/inscription');
-const Student = require('../models/student');
-const University = require('../models/university');
 
 exports.getAllInscriptions = async () => {
     try {
@@ -40,19 +38,8 @@ exports.getInscription = async (id) => {
     }
 };
 
-
 exports.submitRequest = async (inscription) => {
     try {
-        const studentExists = await Student.findById(inscription.student);
-        if (!studentExists) {
-            throw new Error(`Student with ID ${inscription.student} does not exist`);
-        }
-
-        const universityExists = await University.findById(inscription.university);
-        if (!universityExists) {
-            throw new Error(`University with ID ${inscription.university} does not exist`);
-        }
-
         const newInscription = new Inscription(inscription);
         await newInscription.save();
         return newInscription;
@@ -63,20 +50,7 @@ exports.submitRequest = async (inscription) => {
 
 exports.validateRequest = async (id) => {
     try {
-        const inscription = await Inscription.findById(id);
-        if (!inscription) {
-            throw new Error(`Inscription with ID ${id} does not exist`);
-        }
-
-        if (inscription.state === 'approved') {
-            throw new Error('This inscription is already approved');
-        } else if (inscription.state === 'rejected') {
-            throw new Error('Cannot approve an inscription that has been rejected');
-        }
-
-        inscription.state = 'approved';
-        await inscription.save();
-
+        const inscription = await Inscription.findByIdAndUpdate(id, { state: 'approved' }, { new: true });
         return inscription;
     } catch (error) {
         throw new Error(`Failed to validate inscription: ${error.message}`);
@@ -85,20 +59,7 @@ exports.validateRequest = async (id) => {
 
 exports.rejectRequest = async (id) => {
     try {
-        const inscription = await Inscription.findById(id);
-        if (!inscription) {
-            throw new Error(`Inscription with ID ${id} does not exist`);
-        }
-
-        if (inscription.state === 'rejected') {
-            throw new Error('This inscription is already rejected');
-        } else if (inscription.state === 'approved') {
-            throw new Error('Cannot reject an inscription that has been approved');
-        }
-
-        inscription.state = 'rejected';
-        await inscription.save();
-
+        const inscription = await Inscription.findByIdAndUpdate(id, { state: 'rejected' }, { new: true });
         return inscription;
     } catch (error) {
         throw new Error(`Failed to reject inscription: ${error.message}`);
@@ -107,18 +68,7 @@ exports.rejectRequest = async (id) => {
 
 exports.archiveRequest = async (id) => {
     try {
-        const inscription = await Inscription.findById(id);
-        if (!inscription) {
-            throw new Error(`Inscription with ID ${id} does not exist`);
-        }
-
-        if (inscription.state === 'archived') {
-            throw new Error('This inscription is already archived');
-        }
-
-        inscription.state = 'archived';
-        await inscription.save();
-
+        const inscription = await Inscription.findByIdAndUpdate(id, { state: 'archived' }, { new: true });
         return inscription;
     } catch (error) {
         throw new Error(`Failed to archive inscription: ${error.message}`);
